@@ -1,14 +1,14 @@
-//:
+//: Binary Search Tree implement by class, support generic/iterator. 
 
 import Cocoa
 
-class TreeNode<Type:Comparable>{
-    var key:Type
+class TreeNode<Key:Comparable>{
+    var key:Key
     var parent:TreeNode?
     var left:TreeNode?
     var right:TreeNode?
     
-    init(_ key:Type) {
+    init(_ key:Key) {
         self.key = key
         left = nil
         right = nil
@@ -18,13 +18,13 @@ class TreeNode<Type:Comparable>{
     }
 }
 
-struct BSTreeIterator<Type:Comparable> : IteratorProtocol {
-    var curNode:TreeNode<Type>?
+struct BSTreeIterator<Key:Comparable> : IteratorProtocol {
+    var curNode:TreeNode<Key>?
     
-    init(_ first:TreeNode<Type>?) {
+    init(_ first:TreeNode<Key>?) {
         curNode = first
     }
-    mutating func next() -> Type? {
+    mutating func next() -> Key? {
         guard let node = curNode else {
             return nil
         }
@@ -33,17 +33,17 @@ struct BSTreeIterator<Type:Comparable> : IteratorProtocol {
     }
 }
 
-class BSTree<Type:Comparable> : Sequence{
-    var root:TreeNode<Type>?
+class BSTree<Key:Comparable> : Sequence{
+    var root:TreeNode<Key>?
     var count:Int = 0
     
-    func insert(_ key:Type) {
+    func insert(_ key:Key) {
         if root == nil {
-            root = TreeNode<Type>(key)
+            root = TreeNode<Key>(key)
             return
         }
         var node = root
-        var parent:TreeNode<Type>! = root
+        var parent:TreeNode<Key>! = root
         while node != nil {
             let node_key = node!.key
             parent = node
@@ -55,7 +55,7 @@ class BSTree<Type:Comparable> : Sequence{
                 node = node!.right
             }
         }
-        node = TreeNode<Type>(key)
+        node = TreeNode<Key>(key)
         count += 1
         if parent.key > key {
             parent.left = node
@@ -65,12 +65,12 @@ class BSTree<Type:Comparable> : Sequence{
         node!.parent = parent
     }
     
-    func makeIterator() -> BSTreeIterator<Type> {
+    func makeIterator() -> BSTreeIterator<Key> {
         let first = firstNode()
-        return BSTreeIterator<Type>(first)
+        return BSTreeIterator<Key>(first)
     }
     
-    func lookup(_ key:Type) -> Bool {
+    func lookup(_ key:Key) -> Bool {
         var node = root
         while node != nil {
             let node_key = node!.key
@@ -85,11 +85,11 @@ class BSTree<Type:Comparable> : Sequence{
         return false
     }
     
-    func traverse(_ callback:(_:Type) -> Void) {
+    func traverse(_ callback:(_:Key) -> Void) {
         traverseNode(root, callback)
     }
     
-    func traverseNode(_ node:TreeNode<Type>?, _ callback:(_:Type) -> Void) {
+    func traverseNode(_ node:TreeNode<Key>?, _ callback:(_:Key) -> Void) {
         if node == nil {
             return
         }
@@ -99,11 +99,11 @@ class BSTree<Type:Comparable> : Sequence{
         
     }
     
-    func firstNode() -> TreeNode<Type>?{
+    func firstNode() -> TreeNode<Key>?{
         return BSTree.firstNode(curNode: root)
     }
     
-    static func firstNode(curNode:TreeNode<Type>?) -> TreeNode<Type>? {
+    static func firstNode(curNode:TreeNode<Key>?) -> TreeNode<Key>? {
         var node = curNode
         
         while node != nil {
@@ -116,7 +116,7 @@ class BSTree<Type:Comparable> : Sequence{
         return nil
     }
     
-    static func nextNode(curNode:TreeNode<Type>) -> TreeNode<Type>? {
+    static func nextNode(curNode:TreeNode<Key>) -> TreeNode<Key>? {
         var cn = curNode
         
         if let right = cn.right {
@@ -133,7 +133,7 @@ class BSTree<Type:Comparable> : Sequence{
         return nil
     }
     
-    func lastNode() -> TreeNode<Type>? {
+    func lastNode() -> TreeNode<Key>? {
         var node = root
         while node != nil {
             if let right = node!.right {
@@ -145,20 +145,20 @@ class BSTree<Type:Comparable> : Sequence{
         return nil
     }
     
-    func min() -> Type? {
+    func min() -> Key? {
         guard let node = firstNode() else {
             return nil
         }
         return node.key
     }
     
-    func max() -> Type? {
+    func max() -> Key? {
         guard let node = lastNode() else {
             return nil
         }
         return node.key
     }
-    func contains(_ element: Type) -> Bool {
+    func contains(_ element: Key) -> Bool {
         return lookup(element)
     }
 }
@@ -186,7 +186,8 @@ for n in tree {
     print(n)
 }
 
-tree.contains(5)
+print("tree.contains(5) = \(tree.contains(5))")
+
 
 
 
